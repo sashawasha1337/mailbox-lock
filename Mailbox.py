@@ -51,7 +51,7 @@ class Mailbox:
         
     def build_page(self):
         self.clear()
-        tkinter.Button(self.root, text="⚙️", font=("Arial", 20), command=self.show_admin_login).pack(side="right")
+        tkinter.Button(self.root, text="⚙️", font=("Arial", 20), command=self.show_admin_login).place(relx=1.0, anchor="ne")
 
         tkinter.Label(self.root, text="Mailbox Access", font=("Arial", 25), fg='white', bg='black').pack(pady=20)
        
@@ -74,7 +74,9 @@ class Mailbox:
         tkinter.Label(self.root, text=f"Enter Pin for {name}",font=("Arial", 20),fg='white',bg='black').pack(pady=20)
         tkinter.Entry(self.root,font=("Arial",24),show='*',textvariable=self.pin).pack()
         tkinter.Button(self.root,text="Submit",font=("Arial", 20),command=lambda: self.pin_entered(name)).pack(pady=20)
+        tkinter.Button(self.root,text="Back",font=("Arial", 20),command=self.build_page).pack(pady=10)
         tkinter.Label(self.root, textvariable=self.status, font=("Arial", 20), fg='white', bg='black').pack(pady=10)
+
 
      
     def pin_entered(self, name):
@@ -89,8 +91,7 @@ class Mailbox:
             self.status.set("Pin is incorrect")
             self.root.after(5000, lambda:self.status.set(""))
 
-   
-
+           
     def lock_helper(self,name):
         set_unlocking_user(name)
         self.build_page()
@@ -102,7 +103,7 @@ class Mailbox:
 
 
         tkinter.Label(self.root, text="Enter Admin Credentials", font=("Arial", 20), fg='white', bg='black').pack(pady=10)
-        tkinter.Entry(self.root, font=("Arial", 20), textvariable=username).pack(pady=10)
+        tkinter.Entry(self.root, font=("Arial", 20),textvariable=username ).pack(pady=10)
         tkinter.Entry(self.root, font=("Arial", 20),show="*", textvariable=password ).pack(pady=10)
         def attempt_login():
             con = sqlite3.connect("users.db")
@@ -152,8 +153,12 @@ class Mailbox:
             self.status.set(f"Removed {target_user.get()}")
             self.root.after(5000, lambda:self.status.set(""))
 
-            self.root.after(2000, self.build_page)
-        tkinter.Button(self.root, text="Remove", font=("Arial", 20), command=remove_user).pack(pady=10)
+            self.root.after(2000, self.admin_page)
+        button_frame=tkinter.Frame(self.root)
+        button_frame.pack(pady=20) 
+        tkinter.Button(button_frame, text="Remove", font=("Arial", 20), command=remove_user).pack(side="left",padx=10)
+        tkinter.Button(button_frame, text="Back", font=("Arial", 20), command=self.show_admin_settings).pack(side="left",padx=10)
+        tkinter.Label(self.root, textvariable=self.status, font=("Arial", 20), fg='white', bg='black').pack(pady=10)
 
     def add_user(self):
         self.clear()
